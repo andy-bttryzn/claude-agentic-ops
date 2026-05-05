@@ -1,0 +1,27 @@
+{
+  "name": "claude-agentic-ops",
+  "version": "0.1.0",
+  "description": "Reference template for parallel Claude Sonnet subagent orchestration in Node.js ops pipelines",
+  "main": "src/orchestrator.js",
+  "scripts": {
+    "start": "node src/orchestrator.js",
+    "voice:demo": "node voice/voice_calibration.js"
+  },
+  "keywords": [
+    "anthropic",
+    "claude",
+    "claude-code",
+    "agentic-ai",
+    "multi-agent",
+    "mcp",
+    "model-context-protocol",
+    "ops-automation"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.40.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
