@@ -6,7 +6,8 @@
   "main": "src/orchestrator.js",
   "scripts": {
     "start": "node src/orchestrator.js",
-    "voice:demo": "node voice/voice_calibration.js"
+    "voice:demo": "node voice/voice_calibration.js",
+    "test": "node --test tests/"
   },
   "keywords": [
     "anthropic",
