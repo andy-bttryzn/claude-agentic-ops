@@ -36,7 +36,9 @@ claude-agentic-ops/
 │   ├── orchestrator.js       # Main loop. Dispatches Sonnet subagents in parallel.
 │   ├── subagent_runner.js    # Generic subagent wrapper. Single-shot, structured return.
 │   ├── mcp_wiring.js         # MCP server client setup for Gmail / Drive / monday / Airtable.
-│   └── sop_loader.js         # Loads .md rule files into the system-context block.
+│   ├── sop_loader.js         # Loads .md rule files into the system-context block.
+│   └── chat_bridge_telegram.js  # Telegram bot: routes inbound chat messages to per-user Claude Code instances. See patterns/chat-bridge.md.
+├── users.example.yaml        # Sample chat_id → user_dir mapping for the chat bridge.
 ├── sops/
 │   └── example_vendor_onboarding.md   # Annotated SOP file. Frontmatter + body conventions.
 ├── voice/

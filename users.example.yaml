@@ -1,0 +1,20 @@
+# users.example.yaml — chat_id → user_dir mapping for chat_bridge_telegram.js
+#
+# Each user gets their own claude_dir. The CLI auto-loads that dir's memory + state.
+# chat_id is the user's Telegram user id (from msg.from.id, NOT msg.chat.id for groups).
+#
+# To find a user's chat_id: have them DM the bot anything, watch the bridge log,
+# the log emits "unknown chat_id <id> from <username>" for first-time users.
+
+users:
+  - chat_id: 8412309876
+    user_handle: alice
+    claude_dir: /var/agentic/users/alice
+
+  - chat_id: 4920018844
+    user_handle: bob
+    claude_dir: /var/agentic/users/bob
+
+  - chat_id: 1100442299
+    user_handle: carol
+    claude_dir: /var/agentic/users/carol
