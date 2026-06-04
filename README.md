@@ -39,9 +39,19 @@ claude-agentic-ops/
 │   └── sop_loader.js         # Loads .md rule files into the system-context block.
 ├── sops/
 │   └── example_vendor_onboarding.md   # Annotated SOP file. Frontmatter + body conventions.
-└── voice/
-    └── voice_calibration.js  # Corpus-mining stub. Extracts style features from sent-mail JSON.
+├── voice/
+│   └── voice_calibration.js  # Corpus-mining stub. Extracts style features from sent-mail JSON.
+└── patterns/
+    ├── daily-intel-loop.md       # Self-maintaining intel pipeline. Daily digest + investigations crons.
+    └── security-invariants.md    # Five code-level invariants for agents touching untrusted content.
 ```
+
+## Patterns
+
+Standalone architectural pattern docs in `patterns/` — each describes one piece of the production system in enough depth to lift into a different codebase.
+
+- **`patterns/daily-intel-loop.md`** — Self-maintaining intel pipeline: daily digest cron scans verified sources (SDK changelogs, GH releases, engineering blog) for new features and patterns, summarizes via `claude -p`, emails findings. A follow-up investigations cron deep-dives top candidates and emails per-item adoption recommendations with one-line action handoffs.
+- **`patterns/security-invariants.md`** — Five code-level invariants for an agent stack handling untrusted content (Gmail bodies, scraped pages, LLM output) while holding OAuth tokens. Adapted from the RoleScout `SECURITY.md` model. Assumes the LLM *can* be prompt-injected and hardens the host system around it.
 
 ## What this is not
 
