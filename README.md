@@ -43,7 +43,9 @@ claude-agentic-ops/
 │   └── voice_calibration.js  # Corpus-mining stub. Extracts style features from sent-mail JSON.
 └── patterns/
     ├── daily-intel-loop.md       # Self-maintaining intel pipeline. Daily digest + investigations crons.
-    └── security-invariants.md    # Five code-level invariants for agents touching untrusted content.
+    ├── security-invariants.md    # Five code-level invariants for agents touching untrusted content.
+    ├── memory-hygiene.md         # Tiered memory loading + classifier-driven split for the persistent rules dir.
+    └── hooks-architecture.md     # Composing Claude Code hooks (SessionStart / PreToolUse / Stop / etc.) without trapping yourself.
 ```
 
 ## Patterns
@@ -52,6 +54,8 @@ Standalone architectural pattern docs in `patterns/` — each describes one piec
 
 - **`patterns/daily-intel-loop.md`** — Self-maintaining intel pipeline: daily digest cron scans verified sources (SDK changelogs, GH releases, engineering blog) for new features and patterns, summarizes via `claude -p`, emails findings. A follow-up investigations cron deep-dives top candidates and emails per-item adoption recommendations with one-line action handoffs.
 - **`patterns/security-invariants.md`** — Five code-level invariants for an agent stack handling untrusted content (Gmail bodies, scraped pages, LLM output) while holding OAuth tokens. Adapted from the RoleScout `SECURITY.md` model. Assumes the LLM *can* be prompt-injected and hardens the host system around it.
+- **`patterns/memory-hygiene.md`** — Three-layer memory loading (auto-loaded MEMORY.md, hook-injected MEMORY_reference.md, grep-only archive) plus a regex classifier for splitting an accumulated rules dir. Real session: 79KB → 34KB injection across two split passes, ~57% reduction.
+- **`patterns/hooks-architecture.md`** — How to compose a dozen-plus Claude Code hooks across the event lifecycle without trapping yourself in deterministic-block-retry loops, project-scope leakage, or silent guards. Covers the three hook categories (context inject / guard / side-effect-log) and per-event composition rules.
 
 ## What this is not
 

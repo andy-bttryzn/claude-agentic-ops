@@ -1,7 +1,8 @@
 {
   "name": "claude-agentic-ops",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Reference template for parallel Claude Sonnet subagent orchestration in Node.js ops pipelines",
+  "type": "module",
   "main": "src/orchestrator.js",
   "scripts": {
     "start": "node src/orchestrator.js",
@@ -19,7 +20,8 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.40.0"
+    "@anthropic-ai/sdk": "^0.40.0",
+    "dotenv": "^16.4.5"
   },
   "engines": {
     "node": ">=20.0.0"
