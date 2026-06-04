@@ -45,7 +45,8 @@ claude-agentic-ops/
     ├── daily-intel-loop.md       # Self-maintaining intel pipeline. Daily digest + investigations crons.
     ├── security-invariants.md    # Five code-level invariants for agents touching untrusted content.
     ├── memory-hygiene.md         # Tiered memory loading + classifier-driven split for the persistent rules dir.
-    └── hooks-architecture.md     # Composing Claude Code hooks (SessionStart / PreToolUse / Stop / etc.) without trapping yourself.
+    ├── hooks-architecture.md     # Composing Claude Code hooks (SessionStart / PreToolUse / Stop / etc.) without trapping yourself.
+    └── chat-bridge.md            # Per-user Claude Code surfaced in Teams / Telegram / Slack instead of a terminal.
 ```
 
 ## Patterns
@@ -56,6 +57,7 @@ Standalone architectural pattern docs in `patterns/` — each describes one piec
 - **`patterns/security-invariants.md`** — Five code-level invariants for an agent stack handling untrusted content (Gmail bodies, scraped pages, LLM output) while holding OAuth tokens. Adapted from the RoleScout `SECURITY.md` model. Assumes the LLM *can* be prompt-injected and hardens the host system around it.
 - **`patterns/memory-hygiene.md`** — Three-layer memory loading (auto-loaded MEMORY.md, hook-injected MEMORY_reference.md, grep-only archive) plus a regex classifier for splitting an accumulated rules dir. Real session: 79KB → 34KB injection across two split passes, ~57% reduction.
 - **`patterns/hooks-architecture.md`** — How to compose a dozen-plus Claude Code hooks across the event lifecycle without trapping yourself in deterministic-block-retry loops, project-scope leakage, or silent guards. Covers the three hook categories (context inject / guard / side-effect-log) and per-event composition rules.
+- **`patterns/chat-bridge.md`** — Deploy per-user Claude Code to teams that don't want a terminal. Each user gets their own CLI session on their own credentials, accessed via Microsoft Teams / Telegram / Slack. Covers per-user routing, streaming response strategies, per-platform notes (Telegram simplest, Teams via Bot Framework SDK), and why a single shared backend is the wrong pivot.
 
 ## What this is not
 

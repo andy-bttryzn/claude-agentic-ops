@@ -127,6 +127,7 @@ The patterns instead give you the load-bearing pieces:
 - The shape of guard hooks.
 - The shape of the intel loop.
 - The shape of the security invariants.
+- The shape of the chat-bridge surface.
 
 Adapt each to your codebase. Don't pull this in as a dependency.
 
@@ -136,5 +137,6 @@ Adapt each to your codebase. Don't pull this in as a dependency.
 - `patterns/security-invariants.md` — the five code-level host-layer invariants
 - `patterns/memory-hygiene.md` — three-layer memory loading + classifier-driven split
 - `patterns/hooks-architecture.md` — composing hooks without trapping yourself
+- `patterns/chat-bridge.md` — per-user Claude Code surfaced via Teams / Telegram / Slack
 - `src/orchestrator.js` — runnable example of the front-of-house dispatch pattern
 - `sops/example_vendor_onboarding.md` — annotated example SOP file with frontmatter conventions
