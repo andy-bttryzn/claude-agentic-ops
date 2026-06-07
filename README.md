@@ -38,8 +38,9 @@ claude-agentic-ops/
 │   ├── mcp_wiring.js         # MCP server client setup for Gmail / Drive / monday / Airtable.
 │   ├── sop_loader.js         # Loads .md rule files into the system-context block.
 │   ├── chat_bridge_telegram.js  # Telegram bot: routes inbound DMs by chat_id to per-user Claude Code instances. See patterns/chat-bridge.md.
-│   └── chat_bridge_teams.js     # Microsoft Teams bot: routes by Entra (AAD) Object ID. Same pattern as Telegram, Bot Framework SDK surface.
-├── users.example.yaml        # Unified identity → user_dir mapping. One row can carry both chat_id (Telegram) and aad_object_id (Teams).
+│   ├── chat_bridge_teams.js     # Microsoft Teams bot: routes by Entra (AAD) Object ID. Same pattern as Telegram, Bot Framework SDK surface.
+│   └── chat_bridge_slack.js     # Slack bot: routes by Slack user.id. Same pattern, Bolt SDK surface, Socket Mode or HTTPS endpoint.
+├── users.example.yaml        # Unified identity → user_dir mapping. One row can carry chat_id (Telegram) + aad_object_id (Teams) + slack_user_id (Slack).
 ├── sops/
 │   └── example_vendor_onboarding.md   # Annotated SOP file. Frontmatter + body conventions.
 ├── voice/
@@ -60,7 +61,7 @@ Standalone architectural pattern docs in `patterns/` — each describes one piec
 - **`patterns/security-invariants.md`** — Five code-level invariants for an agent stack handling untrusted content (Gmail bodies, scraped pages, LLM output) while holding OAuth tokens. Adapted from the RoleScout `SECURITY.md` model. Assumes the LLM *can* be prompt-injected and hardens the host system around it.
 - **`patterns/memory-hygiene.md`** — Three-layer memory loading (auto-loaded MEMORY.md, hook-injected MEMORY_reference.md, grep-only archive) plus a regex classifier for splitting an accumulated rules dir. Real session: 79KB → 34KB injection across two split passes, ~57% reduction.
 - **`patterns/hooks-architecture.md`** — How to compose a dozen-plus Claude Code hooks across the event lifecycle without trapping yourself in deterministic-block-retry loops, project-scope leakage, or silent guards. Covers the three hook categories (context inject / guard / side-effect-log) and per-event composition rules.
-- **`patterns/chat-bridge.md`** — Deploy per-user Claude Code to teams that don't want a terminal. Each user gets their own CLI session on their own credentials, accessed via Microsoft Teams / Telegram / Slack. Covers per-user routing, streaming response strategies, per-platform notes (Telegram simplest, Teams via Bot Framework SDK), and why a single shared backend is the wrong pivot. **Runnable scaffolds:** `src/chat_bridge_telegram.js` (long-poll, raw Telegram Bot API, zero new deps beyond what's in package.json) and `src/chat_bridge_teams.js` (Bot Framework SDK, needs `botbuilder` + Azure Bot Service registration). Same unified users.yaml feeds both — one user row can route to the same Claude session from either surface.
+- **`patterns/chat-bridge.md`** — Deploy per-user Claude Code to teams that don't want a terminal. Each user gets their own CLI session on their own credentials, accessed via Microsoft Teams / Telegram / Slack. Covers per-user routing, streaming response strategies, per-platform notes (Telegram simplest, Teams via Bot Framework SDK, Slack via Bolt), and why a single shared backend is the wrong pivot. **Three runnable scaffolds:** `src/chat_bridge_telegram.js` (long-poll, raw Telegram Bot API), `src/chat_bridge_teams.js` (Bot Framework SDK + Azure Bot Service registration), and `src/chat_bridge_slack.js` (Bolt SDK with Socket Mode). Same unified `users.yaml` feeds all three — one user row can route to the same Claude session from any of the three surfaces.
 
 ## What this is not
 

@@ -83,7 +83,7 @@ Reference: `botbuilder` (Node) or `botbuilder-python`. **Runnable scaffold lives
 
 ### Slack
 
-Between the two on complexity. Slack's Bolt SDK handles the boilerplate. `user.id` is the routing key.
+Between the two on complexity. Slack's Bolt SDK handles the boilerplate. `user.id` is the routing key. **Runnable scaffold lives at `src/chat_bridge_slack.js`** — handles both DMs (`message` event with no `subtype`) and channel `@`-mentions (`app_mention` event), uses Bolt's Socket Mode by default (no public URL needed for dev), edits the "…thinking" acknowledgment in place with the final reply. Same dispatch path as the other two scaffolds.
 
 ## Per-user account credentials
 

@@ -2,8 +2,9 @@
 #
 # A single user row can carry multiple identity keys; each bridge looks at
 # only the key relevant to its surface and ignores the rest:
-#   - chat_bridge_telegram.js  routes by `chat_id`        (Telegram user id)
-#   - chat_bridge_teams.js     routes by `aad_object_id`  (Entra Object ID)
+#   - chat_bridge_telegram.js  routes by `chat_id`         (Telegram user id)
+#   - chat_bridge_teams.js     routes by `aad_object_id`   (Entra Object ID)
+#   - chat_bridge_slack.js     routes by `slack_user_id`   (Slack workspace user id)
 #
 # Each user gets their own `claude_dir`. The CLI auto-loads that dir's memory
 # and session state, so a single person across both Teams and Telegram talks
@@ -29,8 +30,14 @@ users:
     aad_object_id: 5e8f2a01-3c4d-4b9a-b7f1-1a2b3c4d5e6f
     claude_dir: /var/agentic/users/bob
 
-  # Multi-surface user (Carol reaches the same Claude session from either app)
+  # Multi-surface user (Carol reaches the same Claude session from any of the three)
   - user_handle: carol
     chat_id: 1100442299
     aad_object_id: 9c7b6a55-1234-5678-9abc-def012345678
+    slack_user_id: U0CAROL55
     claude_dir: /var/agentic/users/carol
+
+  # Slack-only user
+  - user_handle: dave
+    slack_user_id: U0DAVE123
+    claude_dir: /var/agentic/users/dave
