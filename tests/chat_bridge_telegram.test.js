@@ -18,13 +18,18 @@ function loadUsers(filePath) {
   const users = [];
   let cur = null;
   for (const line of text.split(/\r?\n/)) {
-    const m = line.match(/^\s*-\s*chat_id:\s*(\d+)/);
-    if (m) { cur = { chat_id: Number(m[1]) }; users.push(cur); continue; }
+    if (line.match(/^\s*-\s+/)) {
+      if (cur) users.push(cur);
+      cur = {};
+    }
     if (!cur) continue;
-    const kv = line.match(/^\s+(\w+):\s*(.+?)\s*$/);
+    const kv = line.match(/^\s*(?:-\s+)?(\w+):\s*(.+?)\s*$/);
     if (kv) cur[kv[1]] = kv[2];
   }
-  return users;
+  if (cur && Object.keys(cur).length) users.push(cur);
+  return users
+    .filter(u => u.chat_id !== undefined)
+    .map(u => ({ ...u, chat_id: Number(u.chat_id) }));
 }
 
 function writeTmpYaml(content) {
@@ -106,10 +111,13 @@ test('parses users.example.yaml from the repo root', () => {
     assert.fail(`users.example.yaml missing at ${examplePath}`);
   }
   const users = loadUsers(examplePath);
-  assert.ok(users.length >= 1, 'example config should have at least 1 user');
+  // Unified example has 3 users; Telegram bridge should see alice + carol
+  // (both have chat_id). Bob is Teams-only and should NOT appear.
+  assert.equal(users.length, 2);
+  const handles = users.map(u => u.user_handle).sort();
+  assert.deepEqual(handles, ['alice', 'carol']);
   for (const u of users) {
     assert.equal(typeof u.chat_id, 'number');
-    assert.ok(u.user_handle, 'each user should have a handle');
     assert.ok(u.claude_dir, 'each user should have a claude_dir');
   }
 });

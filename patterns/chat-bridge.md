@@ -79,7 +79,7 @@ Reference: `node-telegram-bot-api` or raw `fetch` against `api.telegram.org/bot<
 
 More involved. Needs the Bot Framework SDK + an Azure Bot Service registration + an Entra ID (Azure AD) app. The user identifier is the `from.aadObjectId`, which is stable across DMs and channel conversations. Adaptive Cards work natively if you want rich responses with buttons.
 
-Reference: `botbuilder` (Node) or `botbuilder-python`.
+Reference: `botbuilder` (Node) or `botbuilder-python`. **Runnable scaffold lives at `src/chat_bridge_teams.js`** — covers per-user AAD routing, the `/api/messages` endpoint, the `onMembersAdded` welcome flow, and the same dispatch path as the Telegram scaffold. What's NOT in the scaffold (deferred to your deploy): the Azure Bot Service registration, the HTTPS reverse proxy / dev tunnel, persistent CLI per user, and Adaptive Card / file-upload activity types.
 
 ### Slack
 

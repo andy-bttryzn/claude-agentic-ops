@@ -21,20 +21,31 @@ const TG_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const USERS_PATH = process.env.USERS_CONFIG_PATH || './users.yaml';
 if (!TG_TOKEN) { console.error('TELEGRAM_BOT_TOKEN required'); process.exit(1); }
 
-// Minimal yaml parser for the users.yaml shape (chat_id / user_handle / claude_dir per user).
-// Production: use `yaml` or `js-yaml` from npm.
+// Minimal yaml parser for users.yaml — rows can lead with any identity key
+// (chat_id, aad_object_id, user_handle); we collect all keys per row, then
+// keep only rows that have chat_id (Telegram's routing key). Production: use
+// `yaml` or `js-yaml` from npm.
 function loadUsers(path) {
   const text = fs.readFileSync(path, 'utf8');
   const users = [];
   let cur = null;
   for (const line of text.split(/\r?\n/)) {
-    const m = line.match(/^\s*-\s*chat_id:\s*(\d+)/);
-    if (m) { cur = { chat_id: Number(m[1]) }; users.push(cur); continue; }
+    if (line.match(/^\s*-\s+/)) {
+      if (cur) users.push(cur);
+      cur = {};
+    }
     if (!cur) continue;
-    const kv = line.match(/^\s+(\w+):\s*(.+?)\s*$/);
+    // Match key:value on either a list-item line ("  - key: val") or a
+    // continuation line ("    key: val"). The leading "- " is optional.
+    const kv = line.match(/^\s*(?:-\s+)?(\w+):\s*(.+?)\s*$/);
     if (kv) cur[kv[1]] = kv[2];
   }
-  return users;
+  if (cur && Object.keys(cur).length) users.push(cur);
+  // Telegram bridge only cares about rows with a chat_id. Coerce to Number
+  // for the Map lookup (Telegram payload arrives with chat_id as integer).
+  return users
+    .filter(u => u.chat_id !== undefined)
+    .map(u => ({ ...u, chat_id: Number(u.chat_id) }));
 }
 
 const users = loadUsers(USERS_PATH);

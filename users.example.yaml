@@ -1,20 +1,36 @@
-# users.example.yaml — chat_id → user_dir mapping for chat_bridge_telegram.js
+# users.example.yaml — identity → claude_dir mapping for the chat bridges.
 #
-# Each user gets their own claude_dir. The CLI auto-loads that dir's memory + state.
-# chat_id is the user's Telegram user id (from msg.from.id, NOT msg.chat.id for groups).
+# A single user row can carry multiple identity keys; each bridge looks at
+# only the key relevant to its surface and ignores the rest:
+#   - chat_bridge_telegram.js  routes by `chat_id`        (Telegram user id)
+#   - chat_bridge_teams.js     routes by `aad_object_id`  (Entra Object ID)
 #
-# To find a user's chat_id: have them DM the bot anything, watch the bridge log,
-# the log emits "unknown chat_id <id> from <username>" for first-time users.
+# Each user gets their own `claude_dir`. The CLI auto-loads that dir's memory
+# and session state, so a single person across both Teams and Telegram talks
+# to the same Claude Code instance.
+#
+# To find a user's chat_id:
+#   Have them DM the Telegram bot anything; the bridge logs
+#   "unknown chat_id <id> from <username>" for first-time users.
+#
+# To find a user's aad_object_id:
+#   Azure portal → Entra ID → Users → <person> → Object ID. Or grab it from
+#   the bridge's "unknown aadObjectId: <id> (name=...)" log line after their
+#   first DM to the Teams bot.
 
 users:
-  - chat_id: 8412309876
-    user_handle: alice
+  # Telegram-only user (most common when starting)
+  - user_handle: alice
+    chat_id: 8412309876
     claude_dir: /var/agentic/users/alice
 
-  - chat_id: 4920018844
-    user_handle: bob
+  # Teams-only user
+  - user_handle: bob
+    aad_object_id: 5e8f2a01-3c4d-4b9a-b7f1-1a2b3c4d5e6f
     claude_dir: /var/agentic/users/bob
 
-  - chat_id: 1100442299
-    user_handle: carol
+  # Multi-surface user (Carol reaches the same Claude session from either app)
+  - user_handle: carol
+    chat_id: 1100442299
+    aad_object_id: 9c7b6a55-1234-5678-9abc-def012345678
     claude_dir: /var/agentic/users/carol
